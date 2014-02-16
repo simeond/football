@@ -6,7 +6,7 @@ library(mcmcplots)
 m3_string <- "model {
 for(i in 1:n_games) {
   HomeGoals[i] ~ dpois(lambda_home[Season[i], HomeTeam[i],AwayTeam[i]])
-AwayGoals[i] ~ dpois(lambda_away[Season[i], HomeTeam[i],AwayTeam[i]])
+  AwayGoals[i] ~ dpois(lambda_away[Season[i], HomeTeam[i],AwayTeam[i]])
 }
 
 for(season_i in 1:n_seasons) {
@@ -57,6 +57,9 @@ s3 <- coda.samples(m3,
 
 # Merging the three MCMC chains into one matrix
 ms3 <- as.matrix(s3)
+Sys.time()
 
-
-plot(s1[,"skill"])
+summary(s3)
+plot(s3[, "home_baseline"])
+plotPost(exp(ms3[, "home_baseline"]) - exp(ms3[, "away_baseline"]), compVal = 0,
+         xlab = "Home advantage in number of goals")
