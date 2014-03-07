@@ -3,6 +3,23 @@ library(rjags)
 library(coda)
 library(mcmcplots)
 
+#### MOVE TO MODELLING SECTIONS
+
+# A list for JAGS with the data from d where the strings are coded as
+# integers
+data_list <- list(HomeGoals = EPL_data$FTHG,
+                  AwayGoals = EPL_data$FTAG,
+                  HomeTeam  = as.numeric(factor(EPL_data$HomeTeam,levels = teams)),
+                  AwayTeam  = as.numeric(factor(EPL_data$AwayTeam, levels = teams)),
+                  Season    = as.numeric(factor(EPL_data$Season, levels = seasons, order=TRUE)),
+                  n_teams   = length(teams),
+                  n_games   = nrow(EPL_data), n_seasons = length(seasons))
+
+# Convenience function to generate the type of column names Jags outputs.
+col_name <- function(name, ...) {
+  paste0(name, "[", paste(..., sep = ","), "]")
+}
+
 m3_string <- "model {
 for(i in 1:n_games) {
   HomeGoals[i] ~ dpois(lambda_home[Season[i], HomeTeam[i],AwayTeam[i]])
@@ -44,7 +61,7 @@ season_sigma ~ dunif(0, 3)
 }"
 
 
-# Compiling model 1
+# Compiling model 3
 m3 <- jags.model(textConnection(m3_string),
                  data = data_list, n.chains = 3,
                  n.adapt = 10000)
