@@ -7,7 +7,7 @@ library(lubridate)
 
 # ("http://www.football-data.co.uk/mmz4281/1213/E0.csv")
 
-years <- substr(as.character(1993:2014),3,4) # extract two digit years
+years <- substr(as.character(1993:2016),3,4) # extract two digit years
 dates <- head(paste(years,years[-1],sep=""),-1)  
 url <- paste("http://www.football-data.co.uk/mmz4281/",dates,"/E0.csv",sep="")
 
